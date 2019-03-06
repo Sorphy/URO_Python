@@ -12,11 +12,26 @@ class PatientListFrame(ttk.Frame):
         #Components declaration
         inside_frame = Frame(self, bg='white')
 
-        patient_frame = Frame(inside_frame, bg='white')
+        self._patient_frame = Frame(inside_frame, bg='white')
 
-        patient_list_scrool_bar = Scrollbar(patient_frame, width=20)
-        patient_list = Listbox(patient_frame,yscrollcommand=patient_list_scrool_bar.set, height=8, font=big_font, activestyle='none', relief=SUNKEN)
-        patient_label = Label(patient_frame, text='Patients', bg='white')
+        patient_list_scrool_bar = Scrollbar(self._patient_frame, width=20)
+        patient_list = ttk.Treeview(self._patient_frame)
+        patient_list["columns"] = ("PIN", "Name")
+
+        patient_list.column('#0', width=50, anchor=CENTER)
+        patient_list.heading('#1', text='PIN', anchor=CENTER)
+        patient_list.column('#1', width=100, anchor=CENTER)
+        patient_list.heading('#2', text='Name', anchor=CENTER)
+        patient_list.column('#2', anchor=CENTER)
+
+        #TODO: When user press some key, new entry is opened
+
+        self.testEntry = Entry(self._patient_frame)
+
+        patient_list.bind('<Key>', self.entry_test)
+
+
+        patient_label = Label(self._patient_frame, text='Patients', bg='white')
 
         detail_label = Label(inside_frame, text='Detail:', bg='white')
         detail_frame = Frame(inside_frame, bg='white', relief=GROOVE, borderwidth=1, pady=10)
@@ -43,14 +58,16 @@ class PatientListFrame(ttk.Frame):
         update_button = Button(button_frame, text='Update', font=big_font, padx=20, pady=12)
         remove_button = Button(button_frame, text='Remove', font=big_font, padx=20, pady=12)
 
-        #Data int scroolbar
-        for x in range(1,100):
-            patient_list.insert(END, ' Ondra Szkandera ' + str(x) + '\t')
+        #Set data
+        patient_list.insert("", END, text='0',  values=('980429/5372', 'Szkandera Ondřej'))
+        patient_list.insert("", END, text='0',  values=('980429/5372', 'Szkandera Ondřej'))
+        patient_list.insert("", END, text='0',  values=('980429/5372', 'Szkandera Ondřej'))
+        patient_list.insert("", END, text='0',  values=('980429/5372', 'Szkandera Ondřej'))
 
         #Placing
         inside_frame.pack(padx=10, pady=10)
 
-        patient_frame.grid(row=0, column=0, sticky=W+E+S+N)
+        self._patient_frame.grid(row=0, column=0, sticky=W+E+S+N)
 
         patient_label.grid(row=0, column=0, sticky=W)
         patient_list.grid(row=1, column=0, sticky=W+E+S+N)
@@ -82,10 +99,6 @@ class PatientListFrame(ttk.Frame):
         update_button.grid(row=0, column=1, padx=10, pady=10, sticky=W + E + S + N)
         remove_button.grid(row=0, column=2, padx=(10, 0), pady=10, sticky=W + E + S + N)
 
-        #add_button.pack(side=LEFT, anchor=W)
-        #update_button.pack(side=LEFT, anchor=CENTER)
-        #remove_button.pack(side=LEFT, anchor=E)
-
         #Configuration
         self.configure(bg="white")
         patient_list_scrool_bar.config(command=patient_list.yview)
@@ -95,6 +108,15 @@ class PatientListFrame(ttk.Frame):
         button_frame.grid_columnconfigure(1, weight=1)
         button_frame.grid_columnconfigure(2, weight=1)
 
-        patient_frame.rowconfigure(1, weight=1)
-        patient_frame.columnconfigure(0, weight=1)
+        self._patient_frame.rowconfigure(1, weight=1)
+        self._patient_frame.columnconfigure(0, weight=1)
 
+
+    #Todo search entry
+    def entry_test(self, event):
+        if event.char == 'o':
+            self.testEntry.grid(row=1, column=0, sticky=E + S, pady=(0, 2), padx=(0, 2))
+            print('o')
+        else:
+            print('other')
+            self.testEntry.grid_remove()
