@@ -9,4 +9,3 @@ class MainFrame(Frame):
 
         self.mainNotebook = MainNotebook(self)
 
-
