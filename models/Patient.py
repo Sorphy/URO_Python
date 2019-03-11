@@ -1,6 +1,6 @@
 class Patient:
 
-    def __init__(self, pin, fname, lname, birthday, gender, height, weight, phone, email, address, insurance_pin, insurance_number, alergies):
+    def __init__(self, pin, fname, lname, birthday, gender, height, weight, phone, email, address, insurance_pin, insurance_number, alergies, recipes):
         self._fields = {
             "pin": pin,
             "fname": fname,
@@ -14,7 +14,8 @@ class Patient:
             "address": address,
             "insurance_pin": insurance_pin,
             "insurance_number": insurance_number,
-            "alergies": alergies
+            "alergies": alergies,
+            "recipes": recipes
         }
 
     @property

@@ -1,11 +1,20 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import font
+from repository.PatientRepository import PatientRepository
 
 class PatientListFrame(ttk.Frame):
 
     def __init__(self, master, **kwargs):
-        Frame.__init__(self, master, **kwargs)
+        Frame.__init__(self, master)
+
+        self._selected_patient = None
+
+        self._patient_card = kwargs['card']
+
+        self._master = master
+
+        self._patient_repository = PatientRepository.get_instance()
 
         big_font = font.Font(size=11)
 
@@ -35,15 +44,23 @@ class PatientListFrame(ttk.Frame):
         self._birthday_label = Label(self._detail_frame, text='Birthday:', bg='white')
         self._phone_label = Label(self._detail_frame, text='Phone:', bg='white')
         self._email_label = Label(self._detail_frame, text='Email:', bg='white')
-        self._insurance_number_label = Label(self._detail_frame, text='Insurance number:', bg='white')
+        self._insurance_number_label = Label(self._detail_frame, text='Ins PIN:', bg='white')
 
-        self._pin_entry = Label(self._detail_frame, bg='#EEEEEE', state='disabled', relief=FLAT, width=14)
-        self._fname_entry = Label(self._detail_frame, bg='#EEEEEE', state='disabled', relief=FLAT, width=14)
-        self._lname_entry = Label(self._detail_frame, bg='#EEEEEE', state='disabled', relief=FLAT, width=14)
-        self._birthday_entry = Label(self._detail_frame, bg='#EEEEEE', state='disabled', relief=FLAT, width=14)
-        self._phone_entry = Label(self._detail_frame, bg='#EEEEEE', state='disabled', relief=FLAT, width=14)
-        self._email_entry = Label(self._detail_frame, bg='#EEEEEE', state='disabled', relief=FLAT, width=14)
-        self._insurance_number_entry = Label(self._detail_frame, bg='#EEEEEE', state='disabled', relief=FLAT, width=14)
+        self._pin_entry = Label(self._detail_frame, bg='#EEEEEE', state='disabled', relief=FLAT, width=20)
+        self._fname_entry = Label(self._detail_frame, bg='#EEEEEE', state='disabled', relief=FLAT, width=20)
+        self._lname_entry = Label(self._detail_frame, bg='#EEEEEE', state='disabled', relief=FLAT, width=20)
+        self._birthday_entry = Label(self._detail_frame, bg='#EEEEEE', state='disabled', relief=FLAT, width=20)
+        self._phone_entry = Label(self._detail_frame, bg='#EEEEEE', state='disabled', relief=FLAT, width=20)
+        self._email_entry = Label(self._detail_frame, bg='#EEEEEE', state='disabled', relief=FLAT, width=20)
+        self._insurance_number_entry = Label(self._detail_frame, bg='#EEEEEE', state='disabled', relief=FLAT, width=20)
+
+        self._entries = (self._pin_entry,
+                         self._fname_entry,
+                         self._lname_entry,
+                         self._birthday_entry,
+                         self._phone_entry,
+                         self._email_entry,
+                         self._insurance_number_entry)
 
 
 
@@ -51,16 +68,12 @@ class PatientListFrame(ttk.Frame):
 
         self._add_button = Button(self._button_frame, text='  Add  ', font='Helvetica 12 bold', padx=20, pady=12, bg='#1E88E5', fg='white', relief=FLAT)
         self._update_button = Button(self._button_frame, text='Update', font='Helvetica 12 bold', padx=20, pady=12, bg='#1E88E5', fg='white', relief=FLAT, disabledforeground="#CFD8DC")
-        self._remove_button = Button(self._button_frame, text='Remove', font='Helvetica 12 bold', padx=20, pady=12, bg='#1E88E5', fg='white', relief=FLAT, disabledforeground="#CFD8DC")
+        self._remove_button = Button(self._button_frame, text='Remove', font='Helvetica 12 bold', padx=20, pady=12, bg='#1E88E5', fg='white', relief=FLAT, disabledforeground="#CFD8DC", command=self._remove_patient)
 
         self._update_button['state'] = 'disabled'
         self._remove_button['state'] = 'disabled'
 
-        #Set data
-        self._patient_list.insert("", END, text='0',  values=('980429/5372', 'Szkandera Ondřej'))
-        self._patient_list.insert("", END, text='0',  values=('980429/5372', 'Szkandera Ondřej'))
-        self._patient_list.insert("", END, text='0',  values=('980429/5372', 'Szkandera Ondřej'))
-        self._patient_list.insert("", END, text='0',  values=('980429/5372', 'Szkandera Ondřej'))
+        self._fill_list()
 
         #Placing
         self._inside_frame.pack(padx=10, pady=10)
@@ -102,6 +115,10 @@ class PatientListFrame(ttk.Frame):
         self.configure(bg="white")
         self._patient_list_scrool_bar.config(command=self._patient_list.yview)
 
+        #Bind click listener to tree view
+        self._patient_list.bind("<ButtonRelease-1>", self._patient_select_listener)
+        self._patient_list.bind('<Double-Button-1>', self._show_detail)
+
         self._button_frame.grid_rowconfigure(0, weight=1)
         self._button_frame.grid_columnconfigure(0, weight=1)
         self._button_frame.grid_columnconfigure(1, weight=1)
@@ -109,3 +126,53 @@ class PatientListFrame(ttk.Frame):
 
         self._patient_frame.rowconfigure(1, weight=1)
         self._patient_frame.columnconfigure(0, weight=1)
+
+    def _fill_list(self):
+        for i in self._patient_list.get_children():
+            self._patient_list.delete(i)
+
+        temp = 1
+        for patient in self._patient_repository.get_all():
+            self._patient_list.insert("", END, text=str(temp), values=(patient.data['pin'], patient.data['fname'] + " " + patient.data['lname']), tags=('clickable'))
+            temp += 1
+
+    def _patient_select_listener(self, event):
+        cur_item = self._patient_list.focus()
+        selected = self._patient_list.item(cur_item)
+
+        pin = selected['values'][0]
+
+        self._selected_patient = pin
+
+        patient = self._patient_repository.get_by_pin(pin)
+
+        self._pin_entry['text'] = patient.data['pin']
+        self._fname_entry['text'] = patient.data['fname']
+        self._lname_entry['text'] = patient.data['lname']
+        self._birthday_entry['text'] = patient.data['birthday']
+
+        self._phone_entry['text'] = patient.data['phone']
+        self._email_entry['text'] = patient.data['email']
+        self._insurance_number_entry['text'] = patient.data['insurance_number']
+
+        self._update_button['state'] = 'normal'
+        self._remove_button['state'] = 'normal'
+
+    def _remove_patient(self):
+        self._patient_repository.remove(self._selected_patient)
+
+        self._fill_list()
+
+        for entry in self._entries:
+            entry['text'] = ''
+
+        self._update_button['state'] = 'disabled'
+        self._remove_button['state'] = 'disabled'
+
+    def _show_detail(self, event):
+        self._master.select(1)
+        self._patient_card.say_hello()
+
+
+
+

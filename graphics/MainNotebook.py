@@ -12,8 +12,9 @@ class MainNotebook(ttk.Notebook):
 
         self.notebook.pack()
 
-        self.patientListFrame = PatientListFrame(self.notebook)
         self.patientCardFrame = PatientCardFrame(self.notebook)
+        self.patientListFrame = PatientListFrame(self.notebook, card=self.patientCardFrame)
+
 
         self.notebook.add(self.patientListFrame, text="     List     ", padding=5)
         self.notebook.add(self.patientCardFrame, text="     Card     ")

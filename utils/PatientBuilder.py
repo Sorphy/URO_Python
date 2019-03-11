@@ -24,6 +24,8 @@ class PatientBuilder:
 
         self._alergies = ()
 
+        self._recipes = []
+
     def set_fname(self, fname):
         self._fname = fname
         return self
@@ -44,7 +46,7 @@ class PatientBuilder:
         year = self._pin[0:2]
 
         if(int(self._pin[2:4]) > 50):
-            month = str(self._pin[2:4] - 50)
+            month = str(int(self._pin[2:4]) - 50)
             self.set_gender("F")
         else:
             month = str(self._pin[2:4])
@@ -87,11 +89,15 @@ class PatientBuilder:
         self._insurance_pin = pin
         return self
 
+    def set_recipes(self, recipes):
+        self._recipes = recipes
+        return self
+
     def build(self):
         if self._lname==None or self._fname==None or self._pin==None\
             or self._phone==None or self._insurance_number==None or self._insurance_pin==None:
             raise Exception("Not all required attributes")
         else:
             return Patient(self._pin, self._fname, self._lname, self._birthday, self._gender, self._height, self._weight,
-                       self._phone, self._email, self._address, self._insurance_pin, self._insurance_number, self._alergies)
+                       self._phone, self._email, self._address, self._insurance_pin, self._insurance_number, self._alergies, self._recipes)
 

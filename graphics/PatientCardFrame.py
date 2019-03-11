@@ -39,3 +39,5 @@ class PatientCardFrame(Frame):
         #self._save_button.grid(row=0, column=1, padx=10, pady=(10, 0), sticky=W + E + S + N)
 
 
+    def say_hello(self):
+        print('Hello')
