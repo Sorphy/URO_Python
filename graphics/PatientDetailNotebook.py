@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import ttk
-from graphics.ExaminationsFrame import ExaminationsFrame
+from graphics.RecipesFrame import RecipesFrame
 from graphics.PatientDetailFrame import PatientDetailFrame
 
 class PatientDetailNotebook(ttk.Notebook):
@@ -15,9 +15,9 @@ class PatientDetailNotebook(ttk.Notebook):
         self.notebook.pack()
 
         self._patientDetailFrame = PatientDetailFrame(self.notebook)
-        self._examinationsFrame = ExaminationsFrame(self.notebook)
+        self._recipesFrame = RecipesFrame(self.notebook)
 
         self.notebook.add(self._patientDetailFrame, text="     Detail     ", padding=5)
-        self.notebook.add(self._examinationsFrame, text="     Examinations    ", padding=5)
+        self.notebook.add(self._recipesFrame,       text="     Recipes    ", padding=5)
 
 

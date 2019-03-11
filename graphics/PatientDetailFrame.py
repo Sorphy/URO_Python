@@ -60,6 +60,15 @@ class PatientDetailFrame(Frame):
 
         self._alergies_text = Text(self._alergies_frame, width=20, height=3, bg='#EEEEEE', state='disabled', relief=FLAT)
 
+        self._button_frame = Frame(self, pady=5, bg='white')
+
+        self._button_frame.columnconfigure(0, weight=1)
+        self._button_frame.columnconfigure(1, weight=1)
+
+        self._export_button = Button(self._button_frame, text='Export', font='Helvetica 12 bold', padx=20, pady=12, bg='#1E88E5', fg='white', relief=FLAT)
+        self._save_button = Button(self._button_frame, text=' Save ', font='Helvetica 12 bold', padx=20, pady=12, bg='#1E88E5', fg='white', relief=FLAT, disabledforeground="#CFD8DC")
+
+
         #Placing
         self._pin_label.grid(row=0, column=0, sticky=W, padx=(3, 3), pady=(5, 0))
         self._firstname_label.grid(row=1, column=0, sticky=W, padx=(3, 3))
@@ -108,6 +117,11 @@ class PatientDetailFrame(Frame):
 
         self._insurance_frame.grid(row=1, column=1, ipadx=5, padx=7, sticky=W+E+S+N)
 
-        self._alergies_text.grid(row=0, column=0, pady=(10, 10), padx=(10,10))
+        self._alergies_text.grid(row=0, column=0, pady=(5, 10), padx=(10,10))
 
         self._alergies_frame.grid(row=2, column=1)
+
+        self._button_frame.grid(row=3, column=0, ipadx=5, columnspan=2, sticky=W + E + S + N)
+
+        self._export_button.grid(row=0, column=0, sticky=W, pady=(8, 6), padx=(40,0))
+        self._save_button.grid(row=0, column=1, sticky=W, pady=(3, 0), padx=(50,0))
