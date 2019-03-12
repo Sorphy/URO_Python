@@ -25,8 +25,14 @@ class PatientListFrame(ttk.Frame):
 
         self._patient_label = Label(self._patient_frame, text='Patients', bg='white')
 
-        self._patient_list_scrool_bar = Scrollbar(self._patient_frame, width=20)
+
         self._patient_list = ttk.Treeview(self._patient_frame)
+
+        self._patient_list_scrool_bar = Scrollbar(self._patient_frame, width=20)
+
+        self._patient_list_scrool_bar.configure(command=self._patient_list.yview)
+        self._patient_list.configure(yscrollcommand=self._patient_list_scrool_bar.set)
+
         self._patient_list["columns"] = ("PIN", "Name")
 
         self._patient_list.column('#0', width=50, anchor=CENTER)
@@ -137,26 +143,29 @@ class PatientListFrame(ttk.Frame):
             temp += 1
 
     def _patient_select_listener(self, event):
-        cur_item = self._patient_list.focus()
-        selected = self._patient_list.item(cur_item)
+        try:
+            cur_item = self._patient_list.focus()
+            selected = self._patient_list.item(cur_item)
 
-        pin = selected['values'][0]
+            pin = selected['values'][0]
 
-        self._selected_patient = pin
+            self._selected_patient = pin
 
-        patient = self._patient_repository.get_by_pin(pin)
+            patient = self._patient_repository.get_by_pin(pin)
 
-        self._pin_entry['text'] = patient.data['pin']
-        self._fname_entry['text'] = patient.data['fname']
-        self._lname_entry['text'] = patient.data['lname']
-        self._birthday_entry['text'] = patient.data['birthday']
+            self._pin_entry['text'] = patient.data['pin']
+            self._fname_entry['text'] = patient.data['fname']
+            self._lname_entry['text'] = patient.data['lname']
+            self._birthday_entry['text'] = patient.data['birthday']
 
-        self._phone_entry['text'] = patient.data['phone']
-        self._email_entry['text'] = patient.data['email']
-        self._insurance_number_entry['text'] = patient.data['insurance_number']
+            self._phone_entry['text'] = patient.data['phone']
+            self._email_entry['text'] = patient.data['email']
+            self._insurance_number_entry['text'] = patient.data['insurance_number']
 
-        self._update_button['state'] = 'normal'
-        self._remove_button['state'] = 'normal'
+            self._update_button['state'] = 'normal'
+            self._remove_button['state'] = 'normal'
+        except:
+            pass
 
     def _remove_patient(self):
         self._patient_repository.remove(self._selected_patient)

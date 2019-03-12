@@ -24,8 +24,8 @@ class PatientRepository:
                 .set_recipes(
                     [
                         Recipe(1, 235147, 'Prestance', '1-1-1', '15/06/2018', '30/02/2019'),
-                        Recipe(1, 235147, 'Accuzide', '1-1-1', '30/08/2018', '01/03/2019'),
-                        Recipe(1, 235147, 'Dapril', '1-1-1', '15/01/2018', '18/02/2020'),
+                        Recipe(1, 225142, 'Accuzide', '1-1-1', '30/08/2018', '01/03/2019'),
+                        Recipe(1, 365214, 'Dapril', '1-1-1', '15/01/2018', '18/02/2020'),
                     ])
                 .build(),
             '985426/4477':
@@ -61,7 +61,7 @@ class PatientRepository:
                 .set_recipes(
                 [
                     Recipe(1, 235147, 'Prestance', '1-1-1', '15/06/2018', '30/02/2019'),
-                    Recipe(1, 235147, 'Walmark', '1-1-1', '30/08/2018', '01/03/2019'),
+                    Recipe(1, 547852, 'Walmark', '1-1-1', '30/08/2018', '01/03/2019'),
                 ])
                 .set_alergies(['Penicilin'])
                 .build(),
@@ -79,7 +79,7 @@ class PatientRepository:
                 .set_address(Address('Opava', 36, 73545, '17.listopadu'))
                 .set_recipes(
                 [
-                    Recipe(1, 235147, 'Diacordin', '1-1-1', '15/06/2018', '30/02/2019')
+                    Recipe(1, 125478, 'Diacordin', '1-1-1', '15/06/2018', '30/02/2019')
                 ])
                 .set_alergies(['Penicilin'])
                 .build()
@@ -102,6 +102,17 @@ class PatientRepository:
 
     def remove(self, pin):
         del self._patients[pin]
+
+    def remove_recipe(self, pin, code):
+        for key, patient in self._patients.items():
+            if key == pin:
+                for recipe in patient.data['recipes']:
+                    if recipe.data['code'] == code:
+                        patient.data['recipes'].remove(recipe)
+                        break
+
+    def add_recipe(self, pin, recipe):
+        self._patients[pin].data['recipes'].append(recipe)
 
     @staticmethod
     def get_instance():

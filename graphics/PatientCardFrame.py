@@ -18,7 +18,7 @@ class PatientCardFrame(Frame):
         self._patient_name_label = Entry(self._patient_info_frame, bg='#EEEEEE', relief=FLAT, width=45, state=DISABLED, justify='center')
 
         #Placig
-        self._inside_frame.pack(padx=3, pady=10)
+        self._inside_frame.pack(padx=0, pady=10)
 
         self._patient_info_frame.grid(row=0, column=0, sticky=W, pady=(10,5))
 
@@ -34,6 +34,8 @@ class PatientCardFrame(Frame):
 
         #Fill list in recipe frame
         self._patient_detail_notebook.get_recipe_frame().fill_list(data)
+        self._patient_detail_notebook.get_recipe_frame().clear_entries()
+        self._patient_detail_notebook.get_recipe_frame().disable_entries()
 
     def fill_patient_info(self, patient):
         self._patient_pin_label['state'] = 'normal'

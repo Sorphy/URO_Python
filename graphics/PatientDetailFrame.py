@@ -10,6 +10,8 @@ class PatientDetailFrame(Frame):
 
         self.configure(bg="white")
 
+        self._selected_patient = None
+
         self._gender = StringVar()
         self._gender.set('M')
 
@@ -150,6 +152,8 @@ class PatientDetailFrame(Frame):
     def fill_entries(self, patient):
         self._enable_entries()
 
+        self._selected_patient = patient
+
         for x in self._entries:
             x.delete(0, END)
 
@@ -201,6 +205,7 @@ class PatientDetailFrame(Frame):
         pin = self._pin_entry.get()
         gender = self._gender.get()
         alergies_text = self._alergies_text.get('1.0', END)
+        recipes = self._selected_patient.data['recipes']
         alergies = []
 
         for alergie in alergies_text.split(','):
@@ -219,6 +224,7 @@ class PatientDetailFrame(Frame):
             .set_gender(gender)\
             .set_address(Address(city, zip_code, postal_code, street))\
             .set_alergies(alergies)\
+            .set_recipes(recipes)\
             .build()
 
         PatientRepository.get_instance().update(patient)
