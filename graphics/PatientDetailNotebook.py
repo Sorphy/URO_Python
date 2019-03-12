@@ -20,4 +20,8 @@ class PatientDetailNotebook(ttk.Notebook):
         self.notebook.add(self._patientDetailFrame, text="     Detail     ", padding=5)
         self.notebook.add(self._recipesFrame,       text="     Recipes    ", padding=5)
 
+    def get_patient_detail_frame(self):
+        return self._patientDetailFrame
 
+    def get_recipe_frame(self):
+        return self._recipesFrame

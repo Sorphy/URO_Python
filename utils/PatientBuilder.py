@@ -22,7 +22,7 @@ class PatientBuilder:
         self._insurance_pin = None
         self._insurance_number = None
 
-        self._alergies = ()
+        self._alergies = []
 
         self._recipes = []
 
@@ -36,9 +36,11 @@ class PatientBuilder:
 
     def set_birthday(self, day):
         self._birthday = day
+        return self
 
     def set_gender(self, gender):
         self._gender = gender
+        return self
 
     def set_pin(self, pin):
         self._pin = pin
@@ -78,7 +80,7 @@ class PatientBuilder:
         return self
 
     def set_alergies(self, alergies):
-        self._alegries = alergies
+        self._alergies = alergies
         return self
 
     def set_insurance_number(self, number):

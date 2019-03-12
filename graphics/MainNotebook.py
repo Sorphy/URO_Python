@@ -17,6 +17,6 @@ class MainNotebook(ttk.Notebook):
 
 
         self.notebook.add(self.patientListFrame, text="     List     ", padding=5)
-        self.notebook.add(self.patientCardFrame, text="     Card     ")
+        self.notebook.add(self.patientCardFrame, text="     Card     ", padding=(15,0))
 
 

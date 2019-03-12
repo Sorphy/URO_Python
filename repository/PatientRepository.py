@@ -20,13 +20,13 @@ class PatientRepository:
                 .set_phone(601452147)
                 .set_email('filip.novak@gmail.com')
                 .set_address(Address('Ostrava', 36, 73545, '17.listopadu'))
+                .set_alergies(['Penicilin','Sun'])
                 .set_recipes(
                     [
                         Recipe(1, 235147, 'Prestance', '1-1-1', '15/06/2018', '30/02/2019'),
                         Recipe(1, 235147, 'Accuzide', '1-1-1', '30/08/2018', '01/03/2019'),
                         Recipe(1, 235147, 'Dapril', '1-1-1', '15/01/2018', '18/02/2020'),
                     ])
-                .set_alergies(('Penicilin',))
                 .build(),
             '985426/4477':
                 PatientBuilder()
@@ -44,7 +44,7 @@ class PatientRepository:
                 [
                     Recipe(1, 235147, 'Prestance', '1-1-1', '15/06/2018', '30/02/2019'),
                 ])
-                .set_alergies(('Sun',))
+                .set_alergies(['Sun'])
                 .build(),
             '941230/5555':
                 PatientBuilder()
@@ -63,7 +63,7 @@ class PatientRepository:
                     Recipe(1, 235147, 'Prestance', '1-1-1', '15/06/2018', '30/02/2019'),
                     Recipe(1, 235147, 'Walmark', '1-1-1', '30/08/2018', '01/03/2019'),
                 ])
-                .set_alergies(('Penicilin',))
+                .set_alergies(['Penicilin'])
                 .build(),
             '935212/8844':
                 PatientBuilder()
@@ -81,7 +81,7 @@ class PatientRepository:
                 [
                     Recipe(1, 235147, 'Diacordin', '1-1-1', '15/06/2018', '30/02/2019')
                 ])
-                .set_alergies(('Penicilin',))
+                .set_alergies(['Penicilin'])
                 .build()
             }
 

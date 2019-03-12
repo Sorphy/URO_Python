@@ -67,7 +67,7 @@ class PatientListFrame(ttk.Frame):
         self._button_frame = Frame(self._inside_frame, pady=10, bg='white')
 
         self._add_button = Button(self._button_frame, text='  Add  ', font='Helvetica 12 bold', padx=20, pady=12, bg='#1E88E5', fg='white', relief=FLAT)
-        self._update_button = Button(self._button_frame, text='Update', font='Helvetica 12 bold', padx=20, pady=12, bg='#1E88E5', fg='white', relief=FLAT, disabledforeground="#CFD8DC")
+        self._update_button = Button(self._button_frame, text='Update', font='Helvetica 12 bold', padx=20, pady=12, bg='#1E88E5', fg='white', relief=FLAT, disabledforeground="#CFD8DC", command=self._update_patient)
         self._remove_button = Button(self._button_frame, text='Remove', font='Helvetica 12 bold', padx=20, pady=12, bg='#1E88E5', fg='white', relief=FLAT, disabledforeground="#CFD8DC", command=self._remove_patient)
 
         self._update_button['state'] = 'disabled'
@@ -171,7 +171,12 @@ class PatientListFrame(ttk.Frame):
 
     def _show_detail(self, event):
         self._master.select(1)
-        self._patient_card.say_hello()
+        self._patient_card.fill_patient_detail_entries(self._patient_repository.get_by_pin(self._selected_patient))
+        self._patient_card.fill_patient_info(self._patient_repository.get_by_pin(self._selected_patient))
+
+    def _update_patient(self):
+        self._show_detail(None)
+
 
 
 
