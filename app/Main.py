@@ -11,6 +11,4 @@ if __name__ == "__main__":
 
     patients = PatientRepository.get_instance().get_all()
 
-
-
     root.mainloop()

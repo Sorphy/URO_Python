@@ -3,6 +3,7 @@ from tkinter import ttk
 from models.Recipe import Recipe
 from repository.PatientRepository import PatientRepository
 from tkinter import messagebox
+from graphics.AddRecipeFrame import AddRecipeFrame
 
 class RecipesFrame(Frame):
     def __init__(self, master):
@@ -11,7 +12,7 @@ class RecipesFrame(Frame):
         self.configure(bg='white')
 
         self._selected_recipe = None
-        self._selected_patient = None
+        self.selected_patient = None
 
         self._recipes_frame = Frame(self, bg='white')
 
@@ -66,7 +67,7 @@ class RecipesFrame(Frame):
 
         self._button_frame = Frame(self, pady=10, bg='white')
 
-        self._add_button = Button(self._button_frame, text='  Add  ', font='Helvetica 12 bold', padx=20, pady=12, bg='#1E88E5', fg='white', relief=FLAT)
+        self._add_button = Button(self._button_frame, text='  Add  ', font='Helvetica 12 bold', padx=20, pady=12, bg='#1E88E5', fg='white', relief=FLAT, command=self._add_recipe)
         self._save_button = Button(self._button_frame, text='Save', font='Helvetica 12 bold', padx=20, pady=12, bg='#1E88E5', fg='white', relief=FLAT, disabledforeground="#CFD8DC", command=self._save_recipe)
         self._remove_button = Button(self._button_frame, text='Remove', font='Helvetica 12 bold', padx=20, pady=12, bg='#1E88E5', fg='white', relief=FLAT, disabledforeground="#CFD8DC", command=self._remove_recipe)
 
@@ -114,7 +115,7 @@ class RecipesFrame(Frame):
 
     def fill_list(self, patient):
 
-        self._selected_patient = patient
+        self.selected_patient = patient
 
         for i in self._recipe_list.get_children():
             self._recipe_list.delete(i)
@@ -131,7 +132,7 @@ class RecipesFrame(Frame):
 
         code = selected['text']
 
-        recipe = [x for x in self._selected_patient.data['recipes'] if x.data['code'] == code]
+        recipe = [x for x in self.selected_patient.data['recipes'] if x.data['code'] == code]
 
         self.clear_entries()
 
@@ -194,18 +195,26 @@ class RecipesFrame(Frame):
 
         recipe = Recipe(type, code, name, dosage, date_from, date_to)
 
-        PatientRepository.get_instance().remove_recipe(self._selected_patient.data['pin'], self._selected_recipe)
-        PatientRepository.get_instance().add_recipe(self._selected_patient.data['pin'], recipe)
+        PatientRepository.get_instance().remove_recipe(self.selected_patient.data['pin'], self._selected_recipe)
+        PatientRepository.get_instance().add_recipe(self.selected_patient.data['pin'], recipe)
 
         messagebox.showinfo("Update", "Recipe succesfully updated")
 
     def _remove_recipe(self):
-        PatientRepository.get_instance().remove_recipe(self._selected_patient.data['pin'], self._selected_recipe)
-        self.fill_list(self._selected_patient)
+        PatientRepository.get_instance().remove_recipe(self.selected_patient.data['pin'], self._selected_recipe)
+        self.fill_list(self.selected_patient)
 
         self._save_button['state'] = 'disabled'
         self._remove_button['state'] = 'disabled'
 
         self.clear_entries()
         self.disable_entries()
+
+    def _add_recipe(self):
+        new_recipe_window = Toplevel()
+        new_recipe_window.configure(background='white')
+
+        add_recipe_frame = AddRecipeFrame(new_recipe_window, self)
+
+        add_recipe_frame.grid(row=0, column=0)
 

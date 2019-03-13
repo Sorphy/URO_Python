@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import font
 from repository.PatientRepository import PatientRepository
+from graphics.AddPatientFrame import AddPatientFrame
 
 class PatientListFrame(ttk.Frame):
 
@@ -13,6 +14,8 @@ class PatientListFrame(ttk.Frame):
         self._patient_card = kwargs['card']
 
         self._master = master
+
+        self._notebook = kwargs['notebook']
 
         self._patient_repository = PatientRepository.get_instance()
 
@@ -72,14 +75,14 @@ class PatientListFrame(ttk.Frame):
 
         self._button_frame = Frame(self._inside_frame, pady=10, bg='white')
 
-        self._add_button = Button(self._button_frame, text='  Add  ', font='Helvetica 12 bold', padx=20, pady=12, bg='#1E88E5', fg='white', relief=FLAT)
+        self._add_button = Button(self._button_frame, text='  Add  ', font='Helvetica 12 bold', padx=20, pady=12, bg='#1E88E5', fg='white', relief=FLAT, command=self._add_patient)
         self._update_button = Button(self._button_frame, text='Update', font='Helvetica 12 bold', padx=20, pady=12, bg='#1E88E5', fg='white', relief=FLAT, disabledforeground="#CFD8DC", command=self._update_patient)
         self._remove_button = Button(self._button_frame, text='Remove', font='Helvetica 12 bold', padx=20, pady=12, bg='#1E88E5', fg='white', relief=FLAT, disabledforeground="#CFD8DC", command=self._remove_patient)
 
         self._update_button['state'] = 'disabled'
         self._remove_button['state'] = 'disabled'
 
-        self._fill_list()
+        self.fill_list()
 
         #Placing
         self._inside_frame.pack(padx=10, pady=10)
@@ -133,7 +136,7 @@ class PatientListFrame(ttk.Frame):
         self._patient_frame.rowconfigure(1, weight=1)
         self._patient_frame.columnconfigure(0, weight=1)
 
-    def _fill_list(self):
+    def fill_list(self):
         for i in self._patient_list.get_children():
             self._patient_list.delete(i)
 
@@ -170,7 +173,7 @@ class PatientListFrame(ttk.Frame):
     def _remove_patient(self):
         self._patient_repository.remove(self._selected_patient)
 
-        self._fill_list()
+        self.fill_list()
 
         for entry in self._entries:
             entry['text'] = ''
@@ -178,13 +181,29 @@ class PatientListFrame(ttk.Frame):
         self._update_button['state'] = 'disabled'
         self._remove_button['state'] = 'disabled'
 
+        self._master.tab(1, state='disabled')
+
+
     def _show_detail(self, event):
+        self._notebook.enable_tab()
         self._master.select(1)
         self._patient_card.fill_patient_detail_entries(self._patient_repository.get_by_pin(self._selected_patient))
         self._patient_card.fill_patient_info(self._patient_repository.get_by_pin(self._selected_patient))
 
     def _update_patient(self):
+        self._notebook.enable_tab()
         self._show_detail(None)
+
+    def _add_patient(self):
+        new_patient_window = Toplevel()
+        new_patient_window.configure(background='white')
+
+        add_patient_frame = AddPatientFrame(new_patient_window, self)
+
+        add_patient_frame.grid(row=0, column=0)
+
+
+
 
 
 
